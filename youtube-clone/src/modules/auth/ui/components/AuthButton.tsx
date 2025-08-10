@@ -9,7 +9,7 @@ export const AuthButton = () => {
       rounded-full shadow-none"
     >
       <UserCircleIcon />
-      Sign in
+      Sign in Test
     </Button>
   );
 };
