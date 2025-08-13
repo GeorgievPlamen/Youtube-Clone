@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "webhook": "ngrok http --url=sunny-trusty-titmouse.ngrok-free.app 3001",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
