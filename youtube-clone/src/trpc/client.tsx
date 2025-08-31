@@ -7,6 +7,7 @@ import { createTRPCReact } from "@trpc/react-query";
 import { useState } from "react";
 import type { AppRouter } from "./routers/_app";
 import { makeQueryClient } from "./query.client";
+import superjson from "superjson";
 export const trpc = createTRPCReact<AppRouter>();
 let clientQueryClientSingleton: QueryClient;
 function getQueryClient() {
@@ -33,6 +34,7 @@ export function TRPCProvider(
     trpc.createClient({
       links: [
         httpBatchLink({
+          transformer: superjson,
           url: getUrl(),
         }),
       ],
