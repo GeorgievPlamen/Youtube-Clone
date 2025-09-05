@@ -1,21 +1,33 @@
+import { formatDuration } from "@/lib/utils";
 import Image from "next/image";
 
 interface Props {
+  title: string;
+  duration: number;
   imageUrl?: string;
+  previewUrl?: string;
 }
 
-const VideoThumbnail = ({ imageUrl }: Props) => {
+const VideoThumbnail = ({ title, duration, imageUrl, previewUrl }: Props) => {
   return (
-    <div className="relative">
+    <div className="relative group">
       <div className="relativge w-full overflow-hidden rounded-xl aspect-video">
         <Image
           src={imageUrl ?? "/placeholder.svg"}
-          alt="Thumbnail"
+          alt={title}
           fill
-          className="h-full w-full object-cover"
+          className="h-full w-full object-cover group-hover:opacity-0"
+        />
+        <Image
+          src={previewUrl ?? "/placeholder.svg"}
+          alt={title}
+          fill
+          className="h-full w-full object-cover group-hover:opacity-100 opacity-0"
         />
       </div>
-      {/* TODO: Video Duration*/}
+      <div className="absolute bottom-2 right-2 px-1 py-0.5 rounded bg-black/80 text-wihte text-xs font-medium">
+        {formatDuration(duration)}
+      </div>
     </div>
   );
 };
