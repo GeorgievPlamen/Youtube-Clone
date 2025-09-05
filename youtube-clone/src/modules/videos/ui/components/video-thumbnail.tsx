@@ -19,6 +19,7 @@ const VideoThumbnail = ({ title, duration, imageUrl, previewUrl }: Props) => {
           className="h-full w-full object-cover group-hover:opacity-0"
         />
         <Image
+          unoptimized={!!previewUrl}
           src={previewUrl ?? "/placeholder.svg"}
           alt={title}
           fill
