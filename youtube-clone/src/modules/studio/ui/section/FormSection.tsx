@@ -3,6 +3,7 @@ import { trpc } from "@/trpc/client";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import {
@@ -38,6 +39,7 @@ import { toast } from "sonner";
 import VideoPlayer from "@/modules/videos/ui/components/video-player";
 import Link from "next/link";
 import { snakeCaseToTitle } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface Props {
   videoId: string;
@@ -59,6 +61,19 @@ const FormSectionSuspense = ({ videoId }: Props) => {
   const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId });
   const [categories] = trpc.categories.getMany.useSuspenseQuery();
   const utils = trpc.useUtils();
+  const router = useRouter();
+
+  const remove = trpc.videos.remove.useMutation({
+    onSuccess: () => {
+      utils.studio.getMany.invalidate();
+      toast.success("Video removed");
+      router.push("/studio");
+    },
+    onError: () => {
+      toast.error("Something went wrong");
+    },
+  });
+
   const update = trpc.videos.update.useMutation({
     onSuccess: () => {
       utils.studio.getMany.invalidate();
@@ -68,6 +83,7 @@ const FormSectionSuspense = ({ videoId }: Props) => {
       toast.error("Something went wrong");
     },
   });
+
   const form = useForm<z.infer<typeof videoUpdateSchema>>({
     resolver: zodResolver(videoUpdateSchema),
     defaultValues: video,
@@ -112,8 +128,12 @@ const FormSectionSuspense = ({ videoId }: Props) => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <TrashIcon className="size-4 mr-2" />
-                Delete
+                <DropdownMenuItem
+                  onClick={() => remove.mutate({ id: videoId })}
+                >
+                  <TrashIcon className="size-4 mr-2" />
+                  Delete
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
